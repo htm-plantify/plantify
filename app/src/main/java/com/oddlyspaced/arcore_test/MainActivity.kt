@@ -1,7 +1,6 @@
 package com.oddlyspaced.arcore_test
 
 import android.app.ActivityManager
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -56,7 +55,7 @@ class MainActivity : AppCompatActivity() {
             if (clickNumber == 1) {
                 val anchor = hitResult.createAnchor()
                 ModelRenderable.builder().apply {
-                    setSource(applicationContext, R.raw.gfg_gold_text_stand_2)
+                    setSource(applicationContext, R.raw.ar_model)
                     setIsFilamentGltf(true)
                     build().apply {
                         thenAccept { modelRenderable ->
