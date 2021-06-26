@@ -44,6 +44,8 @@ class MainActivity : AppCompatActivity() {
         TransformableNode(arCam.transformationSystem).apply {
             setParent(anchorNode)
             renderable = modelRenderable
+            scaleController.maxScale = 1F
+            scaleController.minScale = 0.001F
             select()
         }
     }
