@@ -4,6 +4,7 @@ import android.app.ActivityManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import com.google.ar.core.Anchor
 import com.google.ar.sceneform.AnchorNode
 import com.google.ar.sceneform.rendering.ModelRenderable
@@ -21,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.findFragmentById(R.id.arCameraArea) as ArFragment
     }
 
-    private var clickNumber = 0
+    private lateinit var anchor: Anchor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkSystemSupport() = (getSystemService(ACTIVITY_SERVICE) as ActivityManager).deviceConfigurationInfo.glEsVersion.toDouble() >= 3.0
 
-    private fun addModel(anchor: Anchor, modelRenderable: ModelRenderable) {
+    private fun addModel(modelRenderable: ModelRenderable) {
         val anchorNode = AnchorNode(anchor)
         anchorNode.setParent(arCam.arSceneView.scene)
         TransformableNode(arCam.transformationSystem).apply {
@@ -51,21 +52,18 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupArCam() {
         arCam.setOnTapArPlaneListener { hitResult, plane, motionEvent ->
-            clickNumber++
-            if (clickNumber == 1) {
-                val anchor = hitResult.createAnchor()
-                ModelRenderable.builder().apply {
-                    setSource(applicationContext, R.raw.ar_model)
-                    setIsFilamentGltf(true)
-                    build().apply {
-                        thenAccept { modelRenderable ->
-                            addModel(anchor, modelRenderable)
-                        }
-                        exceptionally {
-                            Log.e(TAG, "Some error occured!")
-                            it.printStackTrace()
-                            null
-                        }
+            anchor = hitResult.createAnchor()
+            ModelRenderable.builder().apply {
+                setSource(applicationContext, R.raw.ar_model)
+                setIsFilamentGltf(true)
+                build().apply {
+                    thenAccept { modelRenderable ->
+                        addModel(modelRenderable)
+                    }
+                    exceptionally {
+                        Log.e(TAG, "Some error occured!")
+                        it.printStackTrace()
+                        null
                     }
                 }
             }
