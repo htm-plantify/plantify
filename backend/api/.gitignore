@@ -1,0 +1,6 @@
+*.crt
+*.env
+
+node_modules
+
+.vscode

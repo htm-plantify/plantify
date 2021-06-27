@@ -1,0 +1,26 @@
+{
+  "type": "module",
+  "name": "api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "NODE_ENV=production node --es-module-specifier-resolution=node index.js",
+    "dev": "NODE_ENV=development node --es-module-specifier-resolution=node index.js | pino-pretty"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-pino-logger": "^6.0.0",
+    "sequelize": "^6.6.2",
+    "sequelize-cockroachdb": "^6.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.29.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.23.4",
+    "pino-pretty": "^5.1.0"
+  }
+}
