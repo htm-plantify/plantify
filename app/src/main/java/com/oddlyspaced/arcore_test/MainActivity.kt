@@ -4,12 +4,14 @@ import android.app.ActivityManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.ar.core.Anchor
 import com.google.ar.sceneform.AnchorNode
 import com.google.ar.sceneform.rendering.ModelRenderable
 import com.google.ar.sceneform.ux.ArFragment
 import com.google.ar.sceneform.ux.TransformableNode
+import com.oddlyspaced.arcore_test.databinding.ActivityMainBinding
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -22,21 +24,44 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.findFragmentById(R.id.arCameraArea) as ArFragment
     }
 
+    private lateinit var binding: ActivityMainBinding
     private lateinit var anchor: Anchor
+
+    private var plantToAdd: Plant? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        ActivityMainBinding.inflate(layoutInflater).let {
+            binding = it
+            setContentView(it.root)
+        }
 
         if (!checkSystemSupport()) {
             Log.d(TAG, "Device not supported!")
             finish()
         }
 
+        setupViews()
         setupArCam()
     }
 
     private fun checkSystemSupport() = (getSystemService(ACTIVITY_SERVICE) as ActivityManager).deviceConfigurationInfo.glEsVersion.toDouble() >= 3.0
+
+    private fun setupViews() {
+        binding.rvAddPlant.apply {
+            layoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.HORIZONTAL, false)
+            adapter = AddPlantAdapter(Plant.getPlantList()).apply {
+                onItemClick = {
+                    plantToAdd = it
+                    binding.cvAddPlantContainer.isVisible = false
+                }
+            }
+        }
+
+        binding.cvAddPlant.setOnClickListener {
+            binding.cvAddPlantContainer.isVisible = !binding.cvAddPlantContainer.isVisible
+        }
+    }
 
     private fun addModel(modelRenderable: ModelRenderable) {
         val anchorNode = AnchorNode(anchor)
@@ -53,17 +78,20 @@ class MainActivity : AppCompatActivity() {
     private fun setupArCam() {
         arCam.setOnTapArPlaneListener { hitResult, plane, motionEvent ->
             anchor = hitResult.createAnchor()
-            ModelRenderable.builder().apply {
-                setSource(applicationContext, R.raw.ar_model)
-                setIsFilamentGltf(true)
-                build().apply {
-                    thenAccept { modelRenderable ->
-                        addModel(modelRenderable)
-                    }
-                    exceptionally {
-                        Log.e(TAG, "Some error occured!")
-                        it.printStackTrace()
-                        null
+            plantToAdd?.let { plant ->
+                ModelRenderable.builder().apply {
+                    setSource(applicationContext, plant.model)
+                    setIsFilamentGltf(true)
+                    build().apply {
+                        thenAccept { modelRenderable ->
+                            addModel(modelRenderable)
+                            plantToAdd = null
+                        }
+                        exceptionally {
+                            Log.e(TAG, "Some error occured!")
+                            it.printStackTrace()
+                            null
+                        }
                     }
                 }
             }
