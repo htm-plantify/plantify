@@ -85,7 +85,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.cvCart.setOnClickListener {
-            binding.cvCartContainer.isVisible = !binding.cvCartContainer.isVisible
+            if (binding.txCartText.text.toString() != "Empty") {
+                binding.cvCartContainer.isVisible = !binding.cvCartContainer.isVisible
+            }
         }
 
         binding.rvCart.apply {
@@ -121,6 +123,9 @@ class MainActivity : AppCompatActivity() {
             totalCost += it.plant.price * it.quantity
         }
         binding.txCartText.text = if (totalCost == 0.0) "Empty" else "Rs. $totalCost"
+        if (totalCost == 0.0) {
+            binding.cvCartContainer.isVisible = false
+        }
     }
 
     private fun setupArCam() {
