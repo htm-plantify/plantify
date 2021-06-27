@@ -1,4 +1,4 @@
-package com.oddlyspaced.arcore_test
+package com.oddlyspaced.plantify
 
 import org.junit.Test
 
