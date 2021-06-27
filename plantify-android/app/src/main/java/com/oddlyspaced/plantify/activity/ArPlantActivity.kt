@@ -15,6 +15,7 @@ import com.oddlyspaced.plantify.R
 import com.oddlyspaced.plantify.adapter.AddPlantAdapter
 import com.oddlyspaced.plantify.adapter.CartPlantAdapter
 import com.oddlyspaced.plantify.databinding.ActivityMainBinding
+import com.oddlyspaced.plantify.fragment.PlantInfoFragment
 import com.oddlyspaced.plantify.modal.CartItem
 import com.oddlyspaced.plantify.modal.Plant
 import com.oddlyspaced.plantify.modal.PlantExisting
@@ -72,6 +73,13 @@ class ArPlantActivity : AppCompatActivity() {
                 onItemClick = {
                     plantToAdd = it
                     binding.cvAddPlantContainer.isVisible = false
+                }
+                onItemLongClick = {
+                    PlantInfoFragment().apply {
+                        data = it
+                    }.let { fragment ->
+                        fragment.show(supportFragmentManager, fragment::class.simpleName)
+                    }
                 }
             }
         }

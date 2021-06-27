@@ -9,6 +9,7 @@ import com.oddlyspaced.plantify.modal.Plant
 class AddPlantAdapter(private val plants: ArrayList<Plant>): RecyclerView.Adapter<AddPlantAdapter.AddPlantViewHolder>() {
 
     var onItemClick: (Plant) -> Unit = {}
+    var onItemLongClick: (Plant) -> Unit = {}
 
     class AddPlantViewHolder(private val binding: ItemAddPlantBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(data: Plant) {
@@ -25,6 +26,10 @@ class AddPlantAdapter(private val plants: ArrayList<Plant>): RecyclerView.Adapte
         holder.bind(plants[position])
         holder.itemView.setOnClickListener {
             onItemClick(plants[position])
+        }
+        holder.itemView.setOnLongClickListener {
+            onItemLongClick(plants[position])
+            true
         }
     }
 
