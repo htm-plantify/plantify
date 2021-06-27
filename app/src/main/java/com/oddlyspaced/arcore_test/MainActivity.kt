@@ -13,6 +13,7 @@ import com.google.ar.sceneform.ux.ArFragment
 import com.google.ar.sceneform.ux.TransformableNode
 import com.oddlyspaced.arcore_test.databinding.ActivityMainBinding
 import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,8 +27,10 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var anchor: Anchor
+    private lateinit var anchorNode: AnchorNode
 
     private var plantToAdd: Plant? = null
+    private val cartMap = mutableMapOf<Plant, ArrayList<PlantExisting>>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,12 +64,18 @@ class MainActivity : AppCompatActivity() {
         binding.cvAddPlant.setOnClickListener {
             binding.cvAddPlantContainer.isVisible = !binding.cvAddPlantContainer.isVisible
         }
+
+        binding.cvCamera.setOnClickListener {
+            cartMap.forEach { (_, u) ->
+                u.forEach {
+                    removeModel(it)
+                }
+            }
+        }
     }
 
-    private fun addModel(modelRenderable: ModelRenderable) {
-        val anchorNode = AnchorNode(anchor)
-        anchorNode.setParent(arCam.arSceneView.scene)
-        TransformableNode(arCam.transformationSystem).apply {
+    private fun addModel(modelRenderable: ModelRenderable): TransformableNode {
+        return TransformableNode(arCam.transformationSystem).apply {
             setParent(anchorNode)
             renderable = modelRenderable
             scaleController.maxScale = 1F
@@ -75,16 +84,34 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun removeModel(plantExisting: PlantExisting) {
+        plantExisting.anchorNode.removeChild(plantExisting.node)
+    }
+
     private fun setupArCam() {
         arCam.setOnTapArPlaneListener { hitResult, plane, motionEvent ->
             anchor = hitResult.createAnchor()
+            anchorNode = AnchorNode(anchor)
+            anchorNode.setParent(arCam.arSceneView.scene)
             plantToAdd?.let { plant ->
                 ModelRenderable.builder().apply {
                     setSource(applicationContext, plant.model)
                     setIsFilamentGltf(true)
                     build().apply {
                         thenAccept { modelRenderable ->
-                            addModel(modelRenderable)
+                            cartMap[plantToAdd]?.add(
+                                PlantExisting(
+                                    anchorNode,
+                                    addModel(modelRenderable)
+                                )
+                            ) ?: run {
+                                cartMap[plantToAdd!!] = arrayListOf(
+                                    PlantExisting(
+                                        anchorNode,
+                                        addModel(modelRenderable)
+                                    )
+                                )
+                            }
                             plantToAdd = null
                         }
                         exceptionally {
@@ -99,3 +126,8 @@ class MainActivity : AppCompatActivity() {
     }
 
 }
+
+data class PlantExisting(
+    val anchorNode: AnchorNode,
+    val node: TransformableNode
+)
