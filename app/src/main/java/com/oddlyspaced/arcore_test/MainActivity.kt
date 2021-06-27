@@ -32,6 +32,17 @@ class MainActivity : AppCompatActivity() {
     private var plantToAdd: Plant? = null
     private val cartMap = mutableMapOf<Plant, ArrayList<PlantExisting>>()
 
+    private val cartContents = arrayListOf<CartItem>()
+    private val cartAdapter = CartPlantAdapter(cartContents).apply {
+        onItemClick = {
+            cartMap[it.plant]?.let { list ->
+                removeModel(list[0])
+                list.removeAt(0)
+            }
+            updateCart()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ActivityMainBinding.inflate(layoutInflater).let {
@@ -72,6 +83,15 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        binding.cvCart.setOnClickListener {
+            binding.cvCartContainer.isVisible = !binding.cvCartContainer.isVisible
+        }
+
+        binding.rvCart.apply {
+            layoutManager = LinearLayoutManager(applicationContext)
+            adapter = cartAdapter
+        }
     }
 
     private fun addModel(modelRenderable: ModelRenderable): TransformableNode {
@@ -86,6 +106,21 @@ class MainActivity : AppCompatActivity() {
 
     private fun removeModel(plantExisting: PlantExisting) {
         plantExisting.anchorNode.removeChild(plantExisting.node)
+    }
+
+    private fun updateCart() {
+        cartContents.clear()
+        cartMap.forEach {
+            if (it.value.isNotEmpty()) {
+                cartContents.add(CartItem(it.key, it.value.size))
+            }
+        }
+        cartAdapter.notifyDataSetChanged()
+        var totalCost = 0.0
+        cartContents.forEach {
+            totalCost += it.plant.price * it.quantity
+        }
+        binding.txCartText.text = if (totalCost == 0.0) "Empty" else "Rs. $totalCost"
     }
 
     private fun setupArCam() {
@@ -112,6 +147,7 @@ class MainActivity : AppCompatActivity() {
                                     )
                                 )
                             }
+                            updateCart()
                             plantToAdd = null
                         }
                         exceptionally {
