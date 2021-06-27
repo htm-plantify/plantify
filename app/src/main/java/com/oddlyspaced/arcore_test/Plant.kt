@@ -5,6 +5,7 @@ data class Plant(
     val name: String,
     val image: Int,
     val model: Int,
+    val price: Double,
 ) {
     companion object {
         fun getPlantList(): ArrayList<Plant> {
@@ -13,13 +14,15 @@ data class Plant(
                     0,
                     "Indoor Plant",
                     R.drawable.plant,
-                    R.raw.plant_2
+                    R.raw.plant_2,
+                    100.0,
                 ),
                 Plant(
                     0,
                     "Outdoor Plant",
                     R.drawable.plant,
-                    R.raw.plant_1
+                    R.raw.plant_1,
+                    250.0,
                 )
             )
         }
