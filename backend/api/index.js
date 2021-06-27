@@ -8,7 +8,7 @@ const pinoExpress = pino();
 
 const app = express();
 
-const PORT = 8000;
+const { PORT } = process.env;
 
 if (process.env.NODE_ENV === 'development') {
   pinoExpress.logger.level = 'trace';
