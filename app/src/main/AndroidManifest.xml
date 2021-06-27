@@ -3,6 +3,7 @@
     package="com.oddlyspaced.plantify">
 
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature
         android:name="android.hardware.camera.ar"
         android:required="true" />
@@ -14,11 +15,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Arcoretest">
+        <activity android:name=".activity.ArPlantActivity" />
+
         <meta-data
             android:name="com.google.ar.core"
             android:value="optional" />
 
-        <activity android:name="com.oddlyspaced.plantify.activity.ArPlantActivity">
+        <activity android:name=".activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
