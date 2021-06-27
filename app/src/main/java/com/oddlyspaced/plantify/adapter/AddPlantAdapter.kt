@@ -1,9 +1,10 @@
-package com.oddlyspaced.arcore_test
+package com.oddlyspaced.plantify.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.oddlyspaced.arcore_test.databinding.ItemAddPlantBinding
+import com.oddlyspaced.plantify.databinding.ItemAddPlantBinding
+import com.oddlyspaced.plantify.modal.Plant
 
 class AddPlantAdapter(private val plants: ArrayList<Plant>): RecyclerView.Adapter<AddPlantAdapter.AddPlantViewHolder>() {
 

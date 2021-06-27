@@ -1,9 +1,9 @@
-package com.oddlyspaced.arcore_test
+package com.oddlyspaced.plantify.activity
 
 import android.app.ActivityManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.ar.core.Anchor
@@ -11,14 +11,18 @@ import com.google.ar.sceneform.AnchorNode
 import com.google.ar.sceneform.rendering.ModelRenderable
 import com.google.ar.sceneform.ux.ArFragment
 import com.google.ar.sceneform.ux.TransformableNode
-import com.oddlyspaced.arcore_test.databinding.ActivityMainBinding
-import java.util.*
-import kotlin.collections.ArrayList
+import com.oddlyspaced.plantify.R
+import com.oddlyspaced.plantify.adapter.AddPlantAdapter
+import com.oddlyspaced.plantify.adapter.CartPlantAdapter
+import com.oddlyspaced.plantify.databinding.ActivityMainBinding
+import com.oddlyspaced.plantify.modal.CartItem
+import com.oddlyspaced.plantify.modal.Plant
+import com.oddlyspaced.plantify.modal.PlantExisting
 
-class MainActivity : AppCompatActivity() {
+class ArPlantActivity : AppCompatActivity() {
 
     private companion object {
-        const val TAG = "MainActivity"
+        const val TAG = "ArPlantActivity"
     }
 
     private val arCam by lazy {
@@ -168,7 +172,3 @@ class MainActivity : AppCompatActivity() {
 
 }
 
-data class PlantExisting(
-    val anchorNode: AnchorNode,
-    val node: TransformableNode
-)

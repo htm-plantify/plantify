@@ -1,4 +1,6 @@
-package com.oddlyspaced.arcore_test
+package com.oddlyspaced.plantify.modal
+
+import com.oddlyspaced.plantify.R
 
 data class Plant(
     val id: Int,

@@ -1,10 +1,10 @@
-package com.oddlyspaced.arcore_test
+package com.oddlyspaced.plantify.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.oddlyspaced.arcore_test.databinding.ItemAddPlantBinding
-import com.oddlyspaced.arcore_test.databinding.ItemCartPlantBinding
+import com.oddlyspaced.plantify.databinding.ItemCartPlantBinding
+import com.oddlyspaced.plantify.modal.CartItem
 
 class CartPlantAdapter(private val items: ArrayList<CartItem>): RecyclerView.Adapter<CartPlantAdapter.AddPlantViewHolder>() {
 
@@ -33,8 +33,3 @@ class CartPlantAdapter(private val items: ArrayList<CartItem>): RecyclerView.Ada
         return items.size
     }
 }
-
-data class CartItem(
-    val plant: Plant,
-    val quantity: Int,
-)
